@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Onboarding = () => {
+    const navigation = useNavigation(); // Access navigation
+
     const [firstName, setFirstName] = useState('');
     const [email, setEmail] = useState('');
     const [isValidName, setIsValidName] = useState(false);
@@ -20,6 +24,17 @@ const Onboarding = () => {
     };
 
     const isButtonDisabled = !(isValidName && isValidEmail);
+
+    const handleNext = async () => {
+        try {
+            const userData = { firstName, email };
+            await AsyncStorage.setItem('userData', JSON.stringify(userData));
+            console.log('User data saved:', userData);
+            navigation.navigate('Profile'); // Navigate to the Profile screen
+        } catch (error) {
+            console.error('Failed to save user data:', error);
+        }
+    };
 
     return (
         <View style={styles.container}>
@@ -59,10 +74,7 @@ const Onboarding = () => {
             <TouchableOpacity
                 style={[styles.button, isButtonDisabled && styles.buttonDisabled]}
                 disabled={isButtonDisabled}
-                onPress={() => {
-                    // Placeholder for navigation logic
-                    console.log('Next button pressed');
-                }}
+                onPress={handleNext}
             >
                 <Text style={styles.buttonText}>Next</Text>
             </TouchableOpacity>
