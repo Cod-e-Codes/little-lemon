@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -39,7 +39,7 @@ const Onboarding = ({ onComplete }) => {
     };
 
     return (
-        <View style={styles.container}>
+        <ScrollView contentContainerStyle={styles.container}>
             {/* Header */}
             <View style={styles.header}>
                 <Text style={styles.headerText}>Little Lemon</Text>
@@ -49,70 +49,75 @@ const Onboarding = ({ onComplete }) => {
                 />
             </View>
 
-            {/* Input Fields */}
-            <TextInput
-                style={styles.input}
-                placeholder="Enter your first name"
-                value={firstName}
-                onChangeText={validateName}
-            />
-            {!isValidName && firstName.length > 0 && (
-                <Text style={styles.errorText}>First name must contain only letters.</Text>
-            )}
+            {/* Form */}
+            <View style={styles.form}>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Enter your first name"
+                    value={firstName}
+                    onChangeText={validateName}
+                />
+                {!isValidName && firstName.length > 0 && (
+                    <Text style={styles.errorText}>First name must contain only letters.</Text>
+                )}
 
-            <TextInput
-                style={styles.input}
-                placeholder="Enter your email"
-                value={email}
-                onChangeText={validateEmail}
-                keyboardType="email-address"
-                autoCapitalize="none"
-            />
-            {!isValidEmail && email.length > 0 && (
-                <Text style={styles.errorText}>Enter a valid email address.</Text>
-            )}
+                <TextInput
+                    style={styles.input}
+                    placeholder="Enter your email"
+                    value={email}
+                    onChangeText={validateEmail}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                />
+                {!isValidEmail && email.length > 0 && (
+                    <Text style={styles.errorText}>Enter a valid email address.</Text>
+                )}
 
-            {/* Next Button */}
-            <TouchableOpacity
-                style={[styles.button, isButtonDisabled && styles.buttonDisabled]}
-                disabled={isButtonDisabled}
-                onPress={handleNext}
-            >
-                <Text style={styles.buttonText}>Next</Text>
-            </TouchableOpacity>
-        </View>
+                <TouchableOpacity
+                    style={[styles.button, isButtonDisabled && styles.buttonDisabled]}
+                    disabled={isButtonDisabled}
+                    onPress={handleNext}
+                >
+                    <Text style={styles.buttonText}>Next</Text>
+                </TouchableOpacity>
+            </View>
+        </ScrollView>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        flexGrow: 1,
+        alignItems: 'center',
         padding: 20,
-        justifyContent: 'center',
         backgroundColor: '#F4CE14', // Brand yellow for the background
     },
     header: {
-        alignItems: 'center', // Center align both text and logo
-        marginBottom: 20,
+        alignItems: 'center',
+        marginBottom: 20, // Adjust spacing below the logo
     },
     headerText: {
         fontSize: 24,
         fontWeight: 'bold',
         color: '#495E57', // Brand green for the text
-        marginBottom: 10, // Add spacing below the title
+        marginBottom: 10,
     },
     logo: {
-        maxWidth: '80%', // Allow logo to occupy up to 80% of the screen width
-        maxHeight: 150, // Constrain maximum height for consistency
-        resizeMode: 'contain', // Ensure the aspect ratio is preserved
+        width: 100, // Set a consistent width
+        height: 100,
+        resizeMode: 'contain',
+    },
+    form: {
+        width: '100%', // Ensure the form spans the full width
+        marginTop: 20, // Spacing between logo and form
     },
     input: {
         borderWidth: 1,
-        borderColor: '#495E57', // Brand green for the input border
+        borderColor: '#495E57',
         borderRadius: 5,
         padding: 10,
         marginBottom: 10,
-        backgroundColor: '#fff', // White for contrast
+        backgroundColor: '#fff',
     },
     errorText: {
         color: 'red',
@@ -120,20 +125,19 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     button: {
-        backgroundColor: '#495E57', // Brand green for the button
+        backgroundColor: '#495E57',
         padding: 15,
         borderRadius: 5,
         alignItems: 'center',
     },
     buttonDisabled: {
-        backgroundColor: '#ccc', // Neutral gray for disabled button
+        backgroundColor: '#ccc',
     },
     buttonText: {
-        color: '#F4CE14', // Brand yellow for the button text
+        color: '#F4CE14',
         fontSize: 16,
         fontWeight: 'bold',
     },
 });
-
 
 export default Onboarding;
