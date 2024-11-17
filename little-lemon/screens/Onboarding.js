@@ -3,8 +3,8 @@ import { View, Text, TextInput, StyleSheet, Image, TouchableOpacity } from 'reac
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Onboarding = () => {
-    const navigation = useNavigation(); // Access navigation
+const Onboarding = ({ onComplete }) => {
+    const navigation = useNavigation();
 
     const [firstName, setFirstName] = useState('');
     const [email, setEmail] = useState('');
@@ -29,8 +29,10 @@ const Onboarding = () => {
         try {
             const userData = { firstName, email };
             await AsyncStorage.setItem('userData', JSON.stringify(userData));
-            console.log('User data saved:', userData);
-            navigation.navigate('Profile'); // Navigate to the Profile screen
+            await AsyncStorage.setItem('isOnboardingCompleted', 'true');
+
+            onComplete(); // Update state in the parent component
+            navigation.replace('Home'); // Navigate to 'Home'
         } catch (error) {
             console.error('Failed to save user data:', error);
         }
@@ -42,7 +44,7 @@ const Onboarding = () => {
             <View style={styles.header}>
                 <Text style={styles.headerText}>Little Lemon</Text>
                 <Image
-                    source={require('../assets/logo.png')} // Replace with the correct path to your logo
+                    source={require('../assets/logo.png')} // Update the path to your logo file
                     style={styles.logo}
                 />
             </View>
@@ -70,7 +72,7 @@ const Onboarding = () => {
                 <Text style={styles.errorText}>Enter a valid email address.</Text>
             )}
 
-            {/* Button */}
+            {/* Next Button */}
             <TouchableOpacity
                 style={[styles.button, isButtonDisabled && styles.buttonDisabled]}
                 disabled={isButtonDisabled}
@@ -90,19 +92,19 @@ const styles = StyleSheet.create({
         backgroundColor: '#F4CE14', // Brand yellow for the background
     },
     header: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
+        alignItems: 'center', // Center align both text and logo
         marginBottom: 20,
     },
     headerText: {
         fontSize: 24,
         fontWeight: 'bold',
         color: '#495E57', // Brand green for the text
+        marginBottom: 10, // Add spacing below the title
     },
     logo: {
-        width: 40,
-        height: 40,
+        maxWidth: '80%', // Allow logo to occupy up to 80% of the screen width
+        maxHeight: 150, // Constrain maximum height for consistency
+        resizeMode: 'contain', // Ensure the aspect ratio is preserved
     },
     input: {
         borderWidth: 1,
@@ -132,5 +134,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
 });
+
 
 export default Onboarding;

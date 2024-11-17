@@ -57,7 +57,7 @@ const ProfileScreen = ({ navigation }) => {
     const logout = async () => {
         try {
             await AsyncStorage.clear();
-            navigation.replace('Onboarding'); // Redirect to Onboarding screen
+            navigation.replace('Onboarding'); // Ensure 'Onboarding' is always available
         } catch (error) {
             console.error('Failed to log out', error);
         }
